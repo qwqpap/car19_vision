@@ -17,8 +17,8 @@ class FindMiddleLine:
 
         small_img = cv2.resize(img, down_points, interpolation=cv2.INTER_LINEAR)
 
-        start_pix = 130
-        end_pix = 150
+        start_pix = 80
+        end_pix = 250
 
         detected_img = small_img[start_pix:end_pix, 0:640]
 
@@ -35,18 +35,18 @@ class FindMiddleLine:
         cv2.imshow("pap", red_inrange)
 
         blue_left = 320
-        blue_right = 320
+        blue_right = 640
 
         for i in range(640):
             # error_now = i - mid_num
             n = 0
-            for j in range(20):
+            for j in range(170):
                 if blue_inrange[j, i] >= 200:
                     n = n + 1
                 else:
                     pass
 
-            if n >= 10:
+            if n >= 70:
                 blue_left = i
                 break
 
@@ -54,12 +54,12 @@ class FindMiddleLine:
 
             # error_now = i - mid_num
             n = 0
-            for j in range(20):
+            for j in range(170):
                 if blue_inrange[j, i] >= 200:
                     n = n + 1
                 else:
                     pass
-            if n >= 10:
+            if n >= 70:
                 blue_right = i
                 break
 
@@ -69,16 +69,16 @@ class FindMiddleLine:
         red_left = 0
         red_right = 0
 
-        for i in range(640):
+        for i in range(170):
             # error_now = i - mid_num
             n = 0
-            for j in range(20):
+            for j in range(50):
                 if red_inrange[j, i] >= 200:
                     n = n + 1
                 else:
                     pass
 
-            if n >= 10:
+            if n >= 60:
                 red_left = i
                 break
 
@@ -86,12 +86,12 @@ class FindMiddleLine:
 
             # error_now = i - mid_num
             n = 0
-            for j in range(20):
+            for j in range(170):
                 if red_inrange[j, i] >= 200:
                     n = n + 1
                 else:
                     pass
-            if n >= 10:
+            if n >= 60:
                 red_right = i
                 break
 
@@ -110,7 +110,6 @@ class FindMiddleLine:
         return mid
 if __name__ == "__main__":
     #img = cv2.imread("img/16.jpg")
-    video = cv2.VideoCapture(0)
-    ret,img = video.read()
+    img = cv2.imread("img/0.jpg")
     find = FindMiddleLine(img)
     find.find_line()

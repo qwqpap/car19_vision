@@ -17,7 +17,7 @@ def update(x):
     if mode == 'camera':
         ret, img0 = cap.read()
     elif mode == 'picture':
-        img0 = cv2.imread('img/3.jpg')
+        img0 = cv2.imread('stop_photo/17.jpg')
     img = img0.copy()
 
     gs = cv2.getTrackbarPos('gs', 'image')
