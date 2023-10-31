@@ -48,6 +48,7 @@ class FindMiddleLine:
         return different
 
 
+# contribution by huawei
 if __name__ == "__main__":
     img = cv2.imread("img/0.jpg")
     find = FindMiddleLine(img)
