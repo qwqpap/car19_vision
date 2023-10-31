@@ -10,7 +10,8 @@ def stop_line(img):
 
     small_img = cv2.resize(img, down_points, interpolation=cv2.INTER_LINEAR)
 
-    start_pix = 230
+    start_pix = 200
+
     end_pix = 250
 
     small_img = small_img[start_pix:end_pix, 0:640]
@@ -29,6 +30,6 @@ def stop_line(img):
         return False
 
 if __name__ == "__main__":
-    img = cv2.imread("stop_photo/11.jpg")
+    img = cv2.imread("stop_photo/4.jpg")
     fina = stop_line(img)
     print(fina)
