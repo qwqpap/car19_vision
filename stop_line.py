@@ -24,10 +24,11 @@ def stop_line(img):
 
     target_pix = 50
 
-    if all >= target_pix :
+    if all >= target_pix:
         return True
     else:
         return False
+
 
 if __name__ == "__main__":
     img = cv2.imread("stop_photo/4.jpg")
