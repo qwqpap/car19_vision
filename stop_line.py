@@ -1,5 +1,7 @@
 import cv2
 import numpy as np
+
+
 def stop_line(img):
     down_width = 640
     down_height = 320
@@ -12,13 +14,13 @@ def stop_line(img):
 
     yellow = cv2.inRange(hsv, np.array([100, 130, 50]), np.array([128, 255, 240]))
 
-    all = (yellow.sum())/255
+    all = (yellow.sum()) / 255
 
-    cnts = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
+    counts = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
 
-    trage_pix = 50
+    target_pix = 50
 
-    if all >= trage_pix and cnts >=2:
+    if all >= target_pix and counts >= 2:
         return True
     else:
         return False
