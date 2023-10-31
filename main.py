@@ -40,16 +40,15 @@ class FindMiddleLine:
         different -= np.sum(blue_inrange)
         print(different)
 
-
-
         if cv2.waitKey() != "q":
 
             cv2.destroyAllWindows()
 
         print(different)
         return different
+
+
 if __name__ == "__main__":
-    #img = cv2.imread("img/16.jpg")
     img = cv2.imread("img/0.jpg")
     find = FindMiddleLine(img)
     find.find_line()
