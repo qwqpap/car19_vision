@@ -16,8 +16,20 @@ def update(x):
 
     if mode == 'camera':
         ret, img0 = cap.read()
+        down_width = 640
+        down_height = 320
+
+        down_points = (down_width, down_height)
+
+        img0 = cv2.resize(img0, down_points, interpolation=cv2.INTER_LINEAR)
     elif mode == 'picture':
-        img0 = cv2.imread('stop_photo/17.jpg')
+        img0 = cv2.imread('sun.jpg')
+        down_width = 640
+        down_height = 320
+
+        down_points = (down_width, down_height)
+
+        img0 = cv2.resize(img0, down_points, interpolation=cv2.INTER_LINEAR)
     img = img0.copy()
 
     gs = cv2.getTrackbarPos('gs', 'image')

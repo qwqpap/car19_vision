@@ -13,6 +13,7 @@ class FindMiddleLine:
         down_width = 640
         down_height = 320
 
+
         down_points = (down_width, down_height)
 
         small_img = cv2.resize(img, down_points, interpolation=cv2.INTER_LINEAR)
@@ -30,84 +31,23 @@ class FindMiddleLine:
 
         blue_inrange = cv2.inRange(hsv, np.array([100, 130, 50]), np.array([128, 255, 240]))
         red_inrange = cv2.inRange(hsv, np.array([0, 149, 85]), np.array([24, 255, 240]))
-
         cv2.imshow("qwq", blue_inrange)
         cv2.imshow("pap", red_inrange)
+        blue_inrange = blue_inrange.astype(np.int32)
+        red_inrange = red_inrange.astype(np.int32)
+        different = np.sum(red_inrange)
+        print(different)
+        different -= np.sum(blue_inrange)
+        print(different)
 
-        blue_left = 320
-        blue_right = 640
 
-        for i in range(640):
-            # error_now = i - mid_num
-            n = 0
-            for j in range(170):
-                if blue_inrange[j, i] >= 200:
-                    n = n + 1
-                else:
-                    pass
 
-            if n >= 70:
-                blue_left = i
-                break
+        if cv2.waitKey() != "q":
 
-        for i in range(639, 0, -1):
-
-            # error_now = i - mid_num
-            n = 0
-            for j in range(170):
-                if blue_inrange[j, i] >= 200:
-                    n = n + 1
-                else:
-                    pass
-            if n >= 70:
-                blue_right = i
-                break
-
-        print(blue_right)
-        print(blue_left)
-
-        red_left = 0
-        red_right = 0
-
-        for i in range(170):
-            # error_now = i - mid_num
-            n = 0
-            for j in range(50):
-                if red_inrange[j, i] >= 200:
-                    n = n + 1
-                else:
-                    pass
-
-            if n >= 60:
-                red_left = i
-                break
-
-        for i in range(639, 0, -1):
-
-            # error_now = i - mid_num
-            n = 0
-            for j in range(170):
-                if red_inrange[j, i] >= 200:
-                    n = n + 1
-                else:
-                    pass
-            if n >= 60:
-                red_right = i
-                break
-
-        print(red_right)
-        print(red_left)
-
-        cv2.imshow("red",red_inrange)
-        cv2.imshow("blue",blue_inrange)
-
-        if cv2.waitKey(1) != "q":
-            time.sleep(10)
             cv2.destroyAllWindows()
 
-        mid = (blue_left + red_right)/640
-        print(mid)
-        return mid
+        print(different)
+        return different
 if __name__ == "__main__":
     #img = cv2.imread("img/16.jpg")
     img = cv2.imread("img/0.jpg")

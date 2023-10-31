@@ -11,7 +11,6 @@ def stop_line(img):
     small_img = cv2.resize(img, down_points, interpolation=cv2.INTER_LINEAR)
 
     start_pix = 200
-
     end_pix = 250
 
     small_img = small_img[start_pix:end_pix, 0:640]
@@ -20,11 +19,11 @@ def stop_line(img):
 
     yellow = cv2.inRange(hsv, np.array([100, 130, 50]), np.array([128, 255, 240]))
 
-    all = (yellow.sum()) / 255
+    all_pix = (yellow.sum()) / 255
 
     target_pix = 50
 
-    if all >= target_pix:
+    if all_pix >= target_pix:
         return True
     else:
         return False
