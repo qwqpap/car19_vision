@@ -31,15 +31,17 @@ class FindMiddleLine:
 
         blue_inrange = cv2.inRange(hsv, np.array([100, 130, 50]), np.array([128, 255, 240]))
         red_inrange = cv2.inRange(hsv, np.array([0, 149, 85]), np.array([24, 255, 240]))
-        cv2.imshow("qwq", blue_inrange)
-        cv2.imshow("pap", red_inrange)
+
         blue_inrange = blue_inrange.astype(np.int32)
         red_inrange = red_inrange.astype(np.int32)
         different = np.sum(red_inrange)
         print(different)
         different -= np.sum(blue_inrange)
         print(different)
-
+        blue_inrange = blue_inrange.astype(np.uint8)
+        red_inrange = red_inrange.astype(np.uint8)
+        cv2.imshow("qwq", blue_inrange)
+        cv2.imshow("pap", red_inrange)
         if cv2.waitKey() != "q":
 
             cv2.destroyAllWindows()
