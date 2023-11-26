@@ -1,6 +1,9 @@
 import cv2
 import numpy as np
 from numba import jit
+import serial
+import time
+import sys
 
 left_start = 20
 right_start = 620
@@ -50,24 +53,42 @@ def find_value(img11):
     line = (left_line + right_line) / 2
     return line, left_line, right_line
 
+def init_send():
+    ser = serial.Serial('COM4', 115200, timeout=1)
+    return ser
 
-cap = cv2.imread("WIN_20231126_21_01_32_Pro (2).jpg")
+def send_values(ser, servo_value, motor_value):
+    # 向串口发送舵机值和电机值
+    time.sleep(0.1)
+    ser.write(bytes([servo_value, motor_value]))
+    while ser.in_waiting:
+        arduino_feedback = ser.readline().decode()
+        print("Arduino:", arduino_feedback)
 
-cap = cv2.resize(cap,(640,320))
-img = cap
-cap = cv2.cvtColor(cap, cv2.COLOR_BGR2GRAY)
-ret,finally_got = cv2.threshold(cap,0,255,cv2.THRESH_OTSU)
-finally_got = ~finally_got
-line, left_line, right_line = find_value(finally_got)
+if __name__ == "__main__":
+    kp = 1
+    try:
+        ser = init_send()
+        cap = cv2.imread("imgs/WIN_20231126_21_01_32_Pro (2).jpg")
+        "change here to videos"
+        cap = cv2.resize(cap,(640,320))
+        img = cap
+        cap = cv2.cvtColor(cap, cv2.COLOR_BGR2GRAY)
+        ret,finally_got = cv2.threshold(cap,0,255,cv2.THRESH_OTSU)
+        finally_got = ~finally_got
+        line, left_line, right_line = find_value(finally_got)
+        send_values(ser, 90+(kp*(line-(left_line+right_line)/2)), 50)
+        print(line)
+        cv2.rectangle(finally_got, (left_start, up_start), (right_start, down_start), (255, 0, 255), 3)
+        cv2.rectangle(finally_got, (60, up_start), (60, down_start), (255, 0, 255), 3)
+        cv2.rectangle(img, (left_line, up_start), (right_line, down_start), (255, 0, 255), 3)
+        cv2.line(img,(int(line), int(down_start)), (int(line), int(up_start)),(255,0,255), 3)
+        #cv2.rectangle(img, (line, up_start), (line, down_start), (255, 255, 255), 3)
 
-print(line)
-cv2.rectangle(finally_got, (left_start, up_start), (right_start, down_start), (255, 0, 255), 3)
-cv2.rectangle(finally_got, (60, up_start), (60, down_start), (255, 0, 255), 3)
-cv2.rectangle(img, (left_line, up_start), (right_line, down_start), (255, 0, 255), 3)
-cv2.line(img,(int(line), int(down_start)), (int(line), int(up_start)),(255,0,255), 3)
-#cv2.rectangle(img, (line, up_start), (line, down_start), (255, 255, 255), 3)
+        cv2.imshow("qwq",img)
+        cv2.imshow("pap",finally_got)
+        if cv2.waitKey() != "q":
+            cv2.destroyAllWindows()
 
-cv2.imshow("qwq",img)
-cv2.imshow("pap",finally_got)
-if cv2.waitKey() != "q":
-    cv2.destroyAllWindows()
+    except:
+        cv2.destroyAllWindows()

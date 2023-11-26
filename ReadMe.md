@@ -7,3 +7,6 @@
 
 # Instruction
 this program is aim to getting the edge of blue and red to control the car`s run
+
+# 百度组
+百度组视觉在/bd_img下面
