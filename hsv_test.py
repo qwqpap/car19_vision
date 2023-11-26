@@ -1,11 +1,16 @@
-
+# 商业转载请联系作者获得授权，非商业转载请注明出处。
+# For commercial use, please contact the author for authorization. For non-commercial use, please indicate the source.
+# 协议(License)：署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)
+# 作者(Author)：s-ubt-b
+# 链接(URL)：https://qwqpap.xyz/
+# 来源(Source)：天鹅绒房间
 
 import cv2
 import numpy as np
 import time
 
 # 'camera' or 'picture'
-mode = 'picture'
+mode = 'camera'
 
 if mode == 'camera':
     cap = cv2.VideoCapture(0)
@@ -16,20 +21,8 @@ def update(x):
 
     if mode == 'camera':
         ret, img0 = cap.read()
-        down_width = 640
-        down_height = 320
-
-        down_points = (down_width, down_height)
-
-        img0 = cv2.resize(img0, down_points, interpolation=cv2.INTER_LINEAR)
     elif mode == 'picture':
-        img0 = cv2.imread('sun.jpg')
-        down_width = 640
-        down_height = 320
-
-        down_points = (down_width, down_height)
-
-        img0 = cv2.resize(img0, down_points, interpolation=cv2.INTER_LINEAR)
+        img0 = cv2.imread('test.jpg')
     img = img0.copy()
 
     gs = cv2.getTrackbarPos('gs', 'image')
