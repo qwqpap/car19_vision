@@ -8,15 +8,15 @@
 #encoding: utf-8
 
 import cv2
-
+import noted
 import numpy as np
 
 import serial
-
+import noted
 import time
 
 import sys
-
+# from noted import turn_in
 from simple_pid import PID
 
 p = PID(Kp=0.23 , Ki=0, Kd=0.01,setpoint=320, output_limits=(-50, 50))
@@ -32,6 +32,80 @@ down_start = 250
 pressed_pix = 2
 
 speed = 50
+
+
+def check(x1,x2,y1,y2):
+    k=(y2-y1)/(x2-x1)
+    if k>0 and k<0.4:
+        return 1
+    elif k<0 and k>-0.4:
+        return -1
+    else:
+        return False
+def is_close(line1, line2, threshold):
+
+    x1, y1, x2, y2 = line1
+    x3, y3, x4, y4 = line2
+
+    #计算两点之间的距离
+    def distance(x1, y1, x2, y2):
+        return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+        # return x2-x1+y2-y1
+
+    # 计算并检查所有可能的端点对之间的距离
+    if (distance(x1, y1, x3, y3) < threshold or
+        distance(x1, y1, x4, y4) < threshold or
+        distance(x2, y2, x3, y3) < threshold or
+        distance(x2, y2, x4, y4) < threshold):
+        return True
+
+    return False
+
+def turn_in(image):
+    # 读取图片
+    # image = cv2.imread('WIN_20231126_20_59_29_Pro.jpg')
+    # image = cv2.imread('WIN_20231126_21_01_30_Pro.jpg')
+
+    # 转换为灰度图像
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+
+    # 应用 Canny 边缘检测
+    edges = cv2.Canny(gray, 50, 150, apertureSize=3)
+
+    # 使用 Hough 线变换
+    lines = cv2.HoughLinesP(edges, 1, np.pi/180, 100, minLineLength=100, maxLineGap=10)
+
+    # print(type(lines))
+    # 绘制的空白图像
+    line_image = np.copy(image) * 0
+
+    # 检查线条
+    count=0
+    line_check_pos=[]
+    line_check_neg=[]
+    min_distance=0xffffffff
+    for line in lines:
+        x1, y1, x2, y2 = line[0]
+        if check(x1,x2,y1,y2)==1:
+            cv2.line(line_image, (x1, y1), (x2,y2), (255, 0, 0), 3)
+            line_check_pos.append(line[0])
+        elif check(x1,x2,y1,y2)==-1:
+            cv2.line(line_image, (x1, y1), (x2,y2), (255, 0, 0), 3)
+            line_check_neg.append(line[0])
+    # print(len(line_check_neg)+len(line_check_pos))
+    cv2.imshow('Result', line_image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    for pos in line_check_pos:
+        for neg in line_check_neg:
+            if is_close(pos,neg,8.6):
+                count+=1
+    return count>=2
+
+
+
+
 
 def find_value(img11):
 
@@ -200,7 +274,12 @@ if __name__ == "__main__":
             ret, cap = dev_ca.read()  
 
             cap = cv2.resize(cap,(640,320))
-
+            if turn_in(cap):#检测到三角区域
+                err=50
+                bias =math.max(50,err)*0.2
+                send_values(ser, 92+err, speed+bias)
+                time.sleep(1.05)
+                pass
             img = cap
 
             cap = cv2.cvtColor(cap, cv2.COLOR_BGR2GRAY)
@@ -216,8 +295,9 @@ if __name__ == "__main__":
             err =int( p(line))
 
             print(err)
-
-            send_values(ser, 92+err, speed)
+            
+            bias =math.max(50,err)*0.2
+            send_values(ser, 92+err, speed+bias)
 
         cv2.rectangle(finally_got, (left_start, up_start), (right_start, down_start), (255, 0, 255), 3)
 
