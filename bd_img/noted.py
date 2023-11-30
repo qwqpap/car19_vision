@@ -90,9 +90,9 @@ def turn_in(image):
             line_check_neg.append(line[0])
     print(len(line_check_neg)+len(line_check_pos))
     line_image = cv2.addWeighted(image, 0.8, line_image, 3, 0)
-    cv2.imshow('Result', line_image)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.imshow('Result', line_image)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
     for pos in line_check_pos:
         for neg in line_check_neg:
             if is_close(pos,neg,55):

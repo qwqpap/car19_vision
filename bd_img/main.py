@@ -268,18 +268,25 @@ if __name__ == "__main__":
         dev_ca = cv2.VideoCapture(0)
 
         ser = serial.Serial('/dev/arduino', 115200, timeout=1)
-
+        # cnt=1
         while True:
 
             ret, cap = dev_ca.read()  
 
             cap = cv2.resize(cap,(640,320))
-            if turn_in(cap):#检测到三角区域
-                err=50
-                bias =math.max(50,err)*0.2
+            if turn_in(cap): #and cnt==1:#检测到三角区域
+                err=-50
+                bias =math.min(50,abs(err))*0.2
                 send_values(ser, 92+err, speed+bias)
                 time.sleep(1.05)
-                pass
+                # cnt+=1#第一次
+            # elif turn_in(cap) and cnt==2:
+            #     err=-50
+            #     bias =math.min(50,abs(err))*0.2
+            #     send_values(ser, 92+err, speed+bias)
+            #     time.sleep(1.05)
+            #     cnt+=1#第一次
+                
             img = cap
 
             cap = cv2.cvtColor(cap, cv2.COLOR_BGR2GRAY)
@@ -296,7 +303,7 @@ if __name__ == "__main__":
 
             print(err)
             
-            bias =math.max(50,err)*0.2
+            bias =math.min(50,abs(err))*0.2
             send_values(ser, 92+err, speed+bias)
 
         cv2.rectangle(finally_got, (left_start, up_start), (right_start, down_start), (255, 0, 255), 3)
