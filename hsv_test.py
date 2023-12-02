@@ -44,6 +44,7 @@ def update(x):
     inRange_hsv2 = cv2.inRange(erode_hsv, np.array([Hmin2, Smin, Vmin]), np.array([Hmax2, Smax, Vmax]))
     img = inRange_hsv + inRange_hsv2
     # 外接计算
+    print(img.sum())
     cnts = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
     target_list = []
     pos = []
@@ -58,7 +59,7 @@ def update(x):
         x, y, w, h = cv2.boundingRect(cnt)
         cv2.rectangle(img0, (x, y), (x + w, y + h), (0, 255, 0), 2)
         pos.append([int(x + w / 2), y + h / 2])
-    print(pos)
+    #print(pos)
 
 
 def img_test():
