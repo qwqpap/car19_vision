@@ -1,20 +1,20 @@
-# 商业转载请联系作者获得授权，非商业转载请注明出处。
-# For commercial use, please contact the author for authorization. For non-commercial use, please indicate the source.
-# 协议(License)：署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)
-# 作者(Author)：s-ubt-b
-# 链接(URL)：https://qwqpap.xyz/
-# 来源(Source)：天鹅绒房间
 
+import json  # 用于保存配置到文件
 import cv2
 import numpy as np
 import time
 
 # 'camera' or 'picture'
-mode = 'camera'
+mode = 'picture'
 
 if mode == 'camera':
     cap = cv2.VideoCapture(0)
 
+
+def read_config(filename):
+    with open(filename, 'r') as f:
+        config = json.load(f)
+    return config
 
 def update(x):
     global gs, erode, Hmin, Smin, Vmin, Hmax, Smax, Vmax, img, Hmin2, Hmax2, img0, size_min
@@ -22,7 +22,7 @@ def update(x):
     if mode == 'camera':
         ret, img0 = cap.read()
     elif mode == 'picture':
-        img0 = cv2.imread('test.jpg')
+        img0 = cv2.imread('pap.jpg')
     img = img0.copy()
 
     gs = cv2.getTrackbarPos('gs', 'image')
@@ -61,6 +61,25 @@ def update(x):
         pos.append([int(x + w / 2), y + h / 2])
     #print(pos)
 
+def save_config(filename):
+    config = {
+        'gs': cv2.getTrackbarPos('gs', 'image'),
+        'erode': cv2.getTrackbarPos('erode', 'image'),
+        'Hmin1': cv2.getTrackbarPos('Hmin1', 'image'),
+        'Hmax1': cv2.getTrackbarPos('Hmax1', 'image'),
+        'Hmin2': cv2.getTrackbarPos('Hmin2', 'image'),
+        'Hmax2': cv2.getTrackbarPos('Hmax2', 'image'),
+        'Smin': cv2.getTrackbarPos('Smin', 'image'),
+        'Smax': cv2.getTrackbarPos('Smax', 'image'),
+        'Vmin': cv2.getTrackbarPos('Vmin', 'image'),
+        'Vmax': cv2.getTrackbarPos('Vmax', 'image'),
+        'size_min': cv2.getTrackbarPos('size_min', 'image')
+    }
+
+    with open(filename, 'w') as f:
+        json.dump(config, f)
+
+    print(f'Parameters saved to {filename}')
 
 def img_test():
     sleep = 0.1
@@ -101,7 +120,8 @@ def img_test():
     cv2.setTrackbarPos('Vmin', 'image', Vmin)
     cv2.setTrackbarPos('Vmax', 'image', Vmax)
     cv2.setTrackbarPos('size_min', 'image', size_min)
-    while (True):
+
+    while True:
         try:
             update(1)
         except:
@@ -109,9 +129,46 @@ def img_test():
         cv2.imshow('image', img)
         cv2.imshow('image1', img)
         cv2.imshow('image0', img0)
-        time.sleep(sleep)
-        if cv2.waitKey(1) == 27:
+        key = cv2.waitKey(1)
+
+        # 检查按键事件
+        if key == ord('r'):  # 如果按下 '1' 键
+            save_config('red.json')
+        elif key == ord('b'):  # 如果按下 '2' 键
+            save_config('blue.json')
+        elif key == ord('t'):
+            red_dic = read_config('red.json')
+
+            cv2.setTrackbarPos('gs', 'image', red_dic["gs"])
+            cv2.setTrackbarPos('erode', 'image', red_dic["erode"])
+            cv2.setTrackbarPos('Hmin1', 'image', red_dic["Hmin1"])
+            cv2.setTrackbarPos('Hmax1', 'image', red_dic["Hmax1"])
+            cv2.setTrackbarPos('Hmin2', 'image', red_dic["Hmin2"])
+            cv2.setTrackbarPos('Hmax2', 'image', red_dic["Hmax2"])
+            cv2.setTrackbarPos('Smin', 'image', red_dic["Smin"])
+            cv2.setTrackbarPos('Smax', 'image', red_dic["Smax"])
+            cv2.setTrackbarPos('Vmin', 'image', red_dic["Vmin"])
+            cv2.setTrackbarPos('Vmax', 'image', red_dic["Vmax"])
+            cv2.setTrackbarPos('size_min', 'image', red_dic["size_min"])
+        elif key == ord('n'):
+            blue_dic = read_config('blue.json')
+
+            cv2.setTrackbarPos('gs', 'image', blue_dic["gs"])
+            cv2.setTrackbarPos('erode', 'image', blue_dic["erode"])
+            cv2.setTrackbarPos('Hmin1', 'image', blue_dic["Hmin1"])
+            cv2.setTrackbarPos('Hmax1', 'image', blue_dic["Hmax1"])
+            cv2.setTrackbarPos('Hmin2', 'image', blue_dic["Hmin2"])
+            cv2.setTrackbarPos('Hmax2', 'image', blue_dic["Hmax2"])
+            cv2.setTrackbarPos('Smin', 'image', blue_dic["Smin"])
+            cv2.setTrackbarPos('Smax', 'image', blue_dic["Smax"])
+            cv2.setTrackbarPos('Vmin', 'image', blue_dic["Vmin"])
+            cv2.setTrackbarPos('Vmax', 'image', blue_dic["Vmax"])
+            cv2.setTrackbarPos('size_min', 'image', blue_dic["size_min"])
+        elif key == 27:  # 如果按下 ESC 键
             break
+
+        time.sleep(0.1)
+
     cv2.destroyAllWindows()
 
 

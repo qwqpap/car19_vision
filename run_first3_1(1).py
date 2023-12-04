@@ -5,7 +5,7 @@
 作为error输入PID模型
 从而控制舵机打角
 '''
-
+import json
 import rospy
 from geometry_msgs.msg import Twist
 # import sys, select, termios, tty
@@ -16,6 +16,10 @@ from newPID import PID
 from stop_line import stop_line
 import os
 # from camera import *
+def read_config(filename):
+    with open(filename, 'r') as f:
+        config = json.load(f)
+    return config
 
 # PID对象初始化参数
 SERVO_kp = 140
@@ -84,36 +88,16 @@ def update(gs, erode, Hmin1, Smin, Vmin, Hmax1, Smax, Vmax, img, Hmin2, Hmax2, i
 
 
 def detect(img0):
+    global gs, erode, Hmin, Smin, Vmin, Hmax, Smax, Vmax, img, Hmin2, Hmax2, size_min
+    global gs, erode, Hmin_r, Smin_r, Vmin_r, Hmax_r, Smax_r, Vmax_r, img_r, Hmin2_r, Hmax2_r
+    red_dic = read_config('red.json')
+
+
     gs = 0
     erode = 2
-    Hmin1 = 105
-    Hmax1 = 144
-    Hmin2 = 170
-    Hmax2 = 0
-    Smin = 156
-    Smax = 255
-    Vmin = 0
-    Vmax = 255
-    
-    Hmin1_r = 0
-    Hmax1_r = 6
-    Hmin2_r = 147
-    Hmax2_r = 179
-    Smin_r = 173
-    Smax_r = 255
-    Vmin_r = 0
-    Vmax_r = 250
+
     size_min = 900
     
-    # Hmin1_r = 0
-    # Hmax1_r = 10
-    # Hmin2_r = 158
-    # Hmax2_r = 179
-    # Smin_r = 50
-    # Smax_r = 255
-    # Vmin_r = 50
-    # Vmax_r = 255
-    # size_min = 900
 
     # red  = Color('RED' , 0  , 5 , 158, 179, 150, 255, 50, 250)    
     img = img0.copy()
@@ -141,6 +125,29 @@ def detect(img0):
 
 
 if __name__ == "__main__":
+    red_dic = read_config('red.json')
+    blue_dic = read_config('blue.json')
+    ##从配置文件读取HSV参数
+    Hmin1_r = red_dic["Hmin1"]
+    Hmax1_r = red_dic["Hmax1"]
+    Hmin2_r = red_dic["Hmin2"]
+    Hmax2_r = red_dic["Hmax2"]
+    Smin_r = red_dic["Smin"]
+    Smax_r = red_dic["Smax"]
+    Vmin_r = red_dic["Vmin"]
+    Vmax_r = red_dic["Vmax"]
+
+    Hmin1 = blue_dic["Hmin1"]
+    Hmax1 = blue_dic["Hmax1"]
+    Hmin2 = blue_dic["Hmin2"]
+    Hmax2 = blue_dic["Hmax2"]
+    Smin = blue_dic["Smin"]
+    Smax = blue_dic["Smax"]
+    Vmin = blue_dic["Vmin"]
+    Vmax = blue_dic["Vmax"]
+
+
+
     #声明twist节点
     rospy.init_node('racecar_teleop')
     pub = rospy.Publisher('~/car/cmd_vel', Twist, queue_size=5)
