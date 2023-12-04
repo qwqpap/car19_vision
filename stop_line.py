@@ -1,8 +1,20 @@
 import cv2
 import numpy as np
+import json
 
-
+def read_config(filename):
+    with open(filename, 'r') as f:
+        config = json.load(f)
+    return config
+yellow_dic = read_config('yellow.json')
+Hmin = yellow_dic["Hmin1"]
+Hmax= yellow_dic["Hmax1"]
+Smin= yellow_dic["Smin"]
+Smax = yellow_dic["Smax"]
+Vmin =  yellow_dic["Vmin"]
+Vmax = yellow_dic["Vmax"]
 def stop_line(img):
+    global  Hmin, Smin, Vmin, Hmax, Smax, Vmax, Hmin2, Hmax2
     down_width = 640
     down_height = 320
 
@@ -17,7 +29,8 @@ def stop_line(img):
 
     hsv = cv2.cvtColor(small_img, cv2.COLOR_BGR2HSV)
 
-    yellow = cv2.inRange(hsv, np.array([100, 130, 50]), np.array([128, 255, 240]))
+
+    yellow = cv2.inRange(hsv, np.array([Hmin, Smin, Vmin]), np.array([Hmax, Smax, Vmax]))
 
     all_pix = (yellow.sum()) / 255
 

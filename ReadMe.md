@@ -17,5 +17,7 @@ this program is aim to getting the edge of blue and red to control the car`s run
 2. T 按下代表读取红色参数
 3. B 按下代表保存蓝色参数
 4. N 按下代表读取蓝色参数
+5. Y 按下代表保存黄色参数
+6. U 按下代表读取黄色参数
 
 用于快速调参 在比赛时获得极致优势

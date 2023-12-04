@@ -132,10 +132,12 @@ def img_test():
         key = cv2.waitKey(1)
 
         # 检查按键事件
-        if key == ord('r'):  # 如果按下 '1' 键
+        if key == ord('r'):  # 如果按下 'r' 键
             save_config('red.json')
-        elif key == ord('b'):  # 如果按下 '2' 键
+        elif key == ord('b'):  # 如果按下 'b' 键
             save_config('blue.json')
+        elif key == ord('y'):  # 如果按下 'h' 键
+            save_config('yellow.json')
         elif key == ord('t'):
             red_dic = read_config('red.json')
 
@@ -164,6 +166,20 @@ def img_test():
             cv2.setTrackbarPos('Vmin', 'image', blue_dic["Vmin"])
             cv2.setTrackbarPos('Vmax', 'image', blue_dic["Vmax"])
             cv2.setTrackbarPos('size_min', 'image', blue_dic["size_min"])
+        elif key == ord('u'):
+            yellow_dic = read_config('blue.json')
+
+            cv2.setTrackbarPos('gs', 'image', yellow_dic["gs"])
+            cv2.setTrackbarPos('erode', 'image', yellow_dic["erode"])
+            cv2.setTrackbarPos('Hmin1', 'image', yellow_dic["Hmin1"])
+            cv2.setTrackbarPos('Hmax1', 'image', yellow_dic["Hmax1"])
+            cv2.setTrackbarPos('Hmin2', 'image', yellow_dic["Hmin2"])
+            cv2.setTrackbarPos('Hmax2', 'image', yellow_dic["Hmax2"])
+            cv2.setTrackbarPos('Smin', 'image', yellow_dic["Smin"])
+            cv2.setTrackbarPos('Smax', 'image', yellow_dic["Smax"])
+            cv2.setTrackbarPos('Vmin', 'image', yellow_dic["Vmin"])
+            cv2.setTrackbarPos('Vmax', 'image', yellow_dic["Vmax"])
+            cv2.setTrackbarPos('size_min', 'image', yellow_dic["size_min"])
         elif key == 27:  # 如果按下 ESC 键
             break
 
