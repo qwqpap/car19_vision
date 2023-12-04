@@ -136,7 +136,6 @@ if __name__ == "__main__":
     Smax_r = red_dic["Smax"]
     Vmin_r = red_dic["Vmin"]
     Vmax_r = red_dic["Vmax"]
-
     Hmin1 = blue_dic["Hmin1"]
     Hmax1 = blue_dic["Hmax1"]
     Hmin2 = blue_dic["Hmin2"]
