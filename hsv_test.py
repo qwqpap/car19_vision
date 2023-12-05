@@ -1,8 +1,18 @@
-
 import json  # 用于保存配置到文件
 import cv2
 import numpy as np
 import time
+
+"""
+
+1. R 按下代表保存红色参数
+2. T 按下代表读取红色参数
+3. B 按下代表保存蓝色参数
+4. N 按下代表读取蓝色参数
+5. Y 按下代表保存黄色参数
+6. U 按下代表读取黄色参数
+
+"""
 
 # 'camera' or 'picture'
 mode = 'picture'
