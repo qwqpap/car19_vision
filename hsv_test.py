@@ -4,7 +4,7 @@ import numpy as np
 import time
 
 """
-
+                                                                                                                                                                                                                
 1. R 按下代表保存红色参数
 2. T 按下代表读取红色参数
 3. B 按下代表保存蓝色参数
@@ -25,6 +25,7 @@ def read_config(filename):
     with open(filename, 'r') as f:
         config = json.load(f)
     return config
+
 
 def update(x):
     global gs, erode, Hmin, Smin, Vmin, Hmax, Smax, Vmax, img, Hmin2, Hmax2, img0, size_min
@@ -69,7 +70,8 @@ def update(x):
         x, y, w, h = cv2.boundingRect(cnt)
         cv2.rectangle(img0, (x, y), (x + w, y + h), (0, 255, 0), 2)
         pos.append([int(x + w / 2), y + h / 2])
-    #print(pos)
+    # print(pos)
+
 
 def save_config(filename):
     config = {
@@ -90,6 +92,7 @@ def save_config(filename):
         json.dump(config, f)
 
     print(f'Parameters saved to {filename}')
+
 
 def img_test():
     sleep = 0.1
