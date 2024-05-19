@@ -19,7 +19,7 @@ morph = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
 sobelx = edges = cv2.Canny(image=morph, threshold1=100, threshold2=200)
 y_sum = np.sum(sobelx, axis=1)
 max_tar = np.max(y_sum)
-if max_tar>= trigger_pix:
+if max_tar >= trigger_pix:
     flag = True
 
 print(y_sum)
