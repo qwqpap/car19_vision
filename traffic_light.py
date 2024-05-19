@@ -1,0 +1,51 @@
+import cv2
+import numpy as np
+
+
+
+def get_points(img ,hsvmin ,hsv_max ,gs ,erode) -> list:
+
+    img = cv2.GaussianBlur(img, (gs, gs), 1)
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    hsv = cv2.erode(hsv, None, iterations=erode)
+    dst = cv2.inRange(hsv, hsvmin, hsv_max)
+    cv2.imshow("qwq",dst)
+    cnts = cv2.findContours(dst, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[-2]
+    cv2.waitKey(0)
+    pos = []
+    for cnt in cnts:
+        x, y, w, h = cv2.boundingRect(cnt)
+        cv2.rectangle(img, (x, y), (x + w, y + h), 255, 2)
+        pos.append([int(x + w / 2), y + h / 2])
+    return pos
+
+mode = "pic" # or "videos"
+
+
+
+if __name__ == "__main__":
+    if mode == "videos":
+        cap = cv2.VideoCapture(-1)
+
+
+        try:
+
+            while True:
+
+                ret, frame = cap.read()
+
+                # red
+
+                red_points = get_points(frame, np.array([144, 220, 225]), np.array([179, 255, 255]), 7, 0)
+
+                # green
+
+                green_points = get_points(frame, np.array([46, 90, 179]), np.array([69, 206, 255]), 7, 0)
+
+        except:
+            print("cant read the cam")
+
+    else:
+        im = cv2.imread("traffic_light/3.png")
+        red_points = get_points(im, np.array([144, 220, 220]), np.array([179, 255, 255]), 7, 0)
+        print(red_points)
