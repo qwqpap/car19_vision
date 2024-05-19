@@ -19,6 +19,11 @@ def get_points(img ,hsvmin ,hsv_max ,gs ,erode) -> list:
         pos.append([int(x + w / 2), y + h / 2])
     return pos
 
+def crossing_line():
+    pass
+
+
+
 mode = "pic" # or "videos"
 
 
