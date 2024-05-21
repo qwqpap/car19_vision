@@ -20,7 +20,6 @@ sobelx = edges = cv2.Canny(image=morph, threshold1=100, threshold2=200)
 y_sum = np.sum(sobelx, axis=0)
 arx = range(len(y_sum))
 
-
 max_tar = np.max(y_sum)
 if max_tar >= trigger_pix:
     flag = True
