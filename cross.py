@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 trigger_pix = 18000
 # 读取图像
-image = cv2.imread('cross_img/25.jpg')
+image = cv2.imread('cross_img/30.jpg')
 image = image[280:380, 0:640]
 # 转换为灰度图
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -26,17 +26,11 @@ if max_tar >= trigger_pix:
 
 print(x_pixel_counts)
 
-cv2.imshow('Detected Zebra Crossings', sobelx)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+
 plt.figure()
 
 # 绘制折线图
 plt.plot(arx,x_pixel_counts, label='pix_number')
-# 添加标题和标签
-plt.title('Pix_det')
-plt.xlabel('x')
-plt.ylabel('pix_number')
 zero_intervals = []
 start = None
 for i, count in enumerate(x_pixel_counts):
@@ -51,7 +45,17 @@ for i, count in enumerate(x_pixel_counts):
 # 打印找到的区间
 print("Zero intervals:", zero_intervals)
 
+# 可视化结果
+plt.plot(x_pixel_counts)
+for (start, end) in zero_intervals:
+    plt.axvspan(start, end, color='red', alpha=0.5)
+plt.xlabel('x')
+plt.ylabel('Pixel Count')
+plt.show()
 
+cv2.imshow('Detected Zebra Crossings', sobelx)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
 
 # 检查是否存在4个这样的区间
 if len(zero_intervals) >= 4:
@@ -62,8 +66,3 @@ else:
 
 
 
-# 显示图例
-plt.legend()
-
-# 显示图形
-plt.show()
