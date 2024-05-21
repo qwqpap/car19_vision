@@ -38,7 +38,7 @@ if __name__ == "__main__":
             while True:
 
                 ret, frame = cap.read()
-                frame = frame[240:480, 0:640]
+                frame = frame[0:480, 0:640]
                 # red
 
                 red_points = get_points(frame, np.array([144, 220, 225]), np.array([179, 255, 255]), 7, 0)
@@ -51,8 +51,8 @@ if __name__ == "__main__":
             print("cant read the cam")
 
     else:
-        im = cv2.imread("traffic_light/3.png")
-        im = im[240:480, 0:640]
+        im = cv2.imread("cross_img/11.jpg")
+        im = im[0:480, 0:640]
         red_points = get_points(im, np.array([144, 220, 220]), np.array([179, 255, 255]), 7, 0)
         green_points = get_points(im, np.array([71, 119, 145]), np.array([89, 255, 255]), 7, 0)
 

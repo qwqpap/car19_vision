@@ -33,7 +33,7 @@ def update(x):
     if mode == 'camera':
         ret, img0 = cap.read()
     elif mode == 'picture':
-        img0 = cv2.imread('traffic_light/3.png')
+        img0 = cv2.imread('cross_img/11.jpg')
     img0 = cv2.resize(img0,(640,480))
     img = img0.copy()
 
