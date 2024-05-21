@@ -17,14 +17,14 @@ kernel = np.ones((5,5), np.uint8)
 morph = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
 
 sobelx = edges = cv2.Canny(image=morph, threshold1=100, threshold2=200)
-y_sum = np.sum(sobelx, axis=0)
-arx = range(len(y_sum))
+x_pixel_counts = np.sum(sobelx, axis=0)
+arx = range(len(x_pixel_counts))
 
-max_tar = np.max(y_sum)
+max_tar = np.max(x_pixel_counts)
 if max_tar >= trigger_pix:
     flag = True
 
-print(y_sum)
+print(x_pixel_counts)
 
 cv2.imshow('Detected Zebra Crossings', sobelx)
 cv2.waitKey(0)
@@ -32,11 +32,35 @@ cv2.destroyAllWindows()
 plt.figure()
 
 # 绘制折线图
-plt.plot(arx,y_sum, label='pix_number')
+plt.plot(arx,x_pixel_counts, label='pix_number')
 # 添加标题和标签
 plt.title('Pix_det')
 plt.xlabel('x')
 plt.ylabel('pix_number')
+zero_intervals = []
+start = None
+for i, count in enumerate(x_pixel_counts):
+    if count == 0 and start is None:
+        start = i
+    elif count != 0 and start is not None:
+        end = i - 1
+        if end - start + 1 > 10:  # 假设长度大于10的区间才算有效
+            zero_intervals.append((start, end))
+        start = None
+
+# 打印找到的区间
+print("Zero intervals:", zero_intervals)
+
+
+
+# 检查是否存在4个这样的区间
+if len(zero_intervals) >= 4:
+    print("Detected Zebra Crossing")
+else:
+    print("No Zebra Crossing Detected")
+
+
+
 
 # 显示图例
 plt.legend()
