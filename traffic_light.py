@@ -58,3 +58,7 @@ if __name__ == "__main__":
 
         print(red_points)
         print(green_points)
+
+
+def traffic_light(img)-> bool:
+    pass

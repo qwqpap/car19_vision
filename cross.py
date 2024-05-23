@@ -9,7 +9,8 @@ image = image[280:380, 0:640]
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
 # 使用自适应阈值进行二值化
-thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,81,-7)
+# 高斯卷积核
+thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 111, -7)
 
 # 进行形态学操作以去除噪声并突出斑马线
 kernel = np.ones((5,5), np.uint8)
@@ -43,7 +44,7 @@ print("Zero intervals:", zero_intervals)
 # 可视化结果
 plt.plot(x_pixel_counts)
 for (start, end) in zero_intervals:
-    plt.axvspan(start, end, color='red', alpha=0.5)
+    plt.axvspan(start, end, color='pink', alpha=1)
 plt.xlabel('x')
 plt.ylabel('Pixel Count')
 plt.show()
