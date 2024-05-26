@@ -33,7 +33,7 @@ def update(x):
     if mode == 'camera':
         ret, img0 = cap.read()
     elif mode == 'picture':
-        img0 = cv2.imread('cross_img/11.jpg')
+        img0 = cv2.imread('cross_img/112.png')
     img0 = cv2.resize(img0,(640,480))
     img = img0.copy()
 
@@ -63,7 +63,7 @@ def update(x):
     if size_min < 1:
         size_min = 1
     for c in cnts:
-        if cv2.contourArea(c) < size_min:
+        if cv2.contourArea(c) > size_min:
             continue
         else:
             target_list.append(c)
