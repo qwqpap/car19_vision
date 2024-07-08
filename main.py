@@ -40,7 +40,23 @@ class FindMiddleLine:
         different = different/(max_pix*255)
         print(different)
         return different
-"""        print(different)
+
+    def trun_around(self):
+        img = self.raw_img
+        down_width = 640
+        down_height = 320
+
+        down_points = (down_width, down_height)
+
+        small_img = cv2.resize(img, down_points, interpolation=cv2.INTER_LINEAR)
+
+        start_pix = 80
+        end_pix = 250
+        max_pix = (end_pix - start_pix * 640)
+        detected_img = small_img[start_pix:end_pix, 0:640]
+
+    """ 
+        print(different)
         blue_inrange = blue_inrange.astype(np.uint8)
         red_inrange = red_inrange.astype(np.uint8)
         cv2.imshow("qwq", blue_inrange)
@@ -49,7 +65,8 @@ class FindMiddleLine:
 
             cv2.destroyAllWindows()
 
-        print(different)"""
+        print(different)
+    """
 
 
 
