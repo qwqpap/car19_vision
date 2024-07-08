@@ -9,13 +9,17 @@ class LineFinder:
         self.image = None
         self.image_size = (640, 480)
         self.cut_range = [(0, 240), (640, 480)]
-        self.image_path = 'photo/11.jpg'
+        self.image_path = 'turn_around/11.jpg'
         self.Flag = "Not start"
         self.capture = cv2.VideoCapture(0)
-
+        self.turn_loc = (400, 500)
+        self.turn_tar = 20
+        self.if_turn = False
+        self.turn_times = 2  # 剩余的转弯次数 这个方便现场爆改
     def read_image(self):
         self.image = cv2.imread(self.image_path, 0)
         self.Flag = "Now Process"
+
 
     def read_cap(self):
         ret, frame = self.capture.read()
@@ -26,10 +30,21 @@ class LineFinder:
 
     # 预处理裁切,模糊与大津法
     def img_pre_deal(self):
+        self.if_turn = False
         self.image = cv2.resize(self.image, self.image_size)
         cut_image = self.image[self.cut_range[0][1]:self.cut_range[1][1], self.cut_range[0][0]:self.cut_range[1][0]]
         gauss_img = cv2.GaussianBlur(cut_image, (25, 25), sigmaX=0, sigmaY=0)
-        edge_img = cv2.adaptiveThreshold(gauss_img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 81, -7)
+        edge_img = cv2.adaptiveThreshold(gauss_img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 81, -7) # 在二值化之后的图像直接爆改
+        if self.turn_times > 0: # 当还没有用完的时候试一试
+
+            horizontal_sum = np.sum(edge_img, axis=1)
+            # 将求和结果除以255进行归一化
+            normalized_sum = horizontal_sum / 255
+           # 对归一化后的数组的某一部分进行求和
+            partial_sum = np.sum(normalized_sum[self.turn_loc[0]:self.turn_loc[1]])
+            if partial_sum >= self.turn_tar:
+                self.turn_times -= 1
+                self.if_turn = True
         kernel = np.ones((5, 5), dtype=np.uint8)
         edge_img = cv2.erode(edge_img, kernel, 1)
         self.in_doing_img = edge_img
@@ -103,7 +118,7 @@ class LineFinder:
 if __name__ == "__main__":
     line = LineFinder()
     while True:
-        line_mid, flag = line.process("cam")
+        line_mid, flag = line.process("test")
         # cv2.imshow("img",line.in_doing_img)
         # cv2.waitKey(0)
         print(line_mid)
