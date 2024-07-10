@@ -12,8 +12,8 @@ class LineFinder:
         self.image_path = 'turn_around/11.jpg'
         self.Flag = "Not start"
         self.capture = cv2.VideoCapture(0)
-        self.turn_loc = (400, 500)
-        self.turn_tar = 20
+        self.turn_loc = (200,220)
+        self.turn_tar = 500
         self.if_turn = False
         self.turn_times = 2  # 剩余的转弯次数 这个方便现场爆改
     def read_image(self):
