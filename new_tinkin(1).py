@@ -16,6 +16,7 @@ class LineFinder:
         self.turn_tar = 500
         self.if_turn = False
         self.turn_times = 2  # 剩余的转弯次数 这个方便现场爆改
+
     def read_image(self):
         self.image = cv2.imread(self.image_path, 0)
         self.Flag = "Now Process"
@@ -32,19 +33,24 @@ class LineFinder:
     def img_pre_deal(self):
         self.if_turn = False
         self.image = cv2.resize(self.image, self.image_size)
-        cut_image = self.image[self.cut_range[0][1]:self.cut_range[1][1], self.cut_range[0][0]:self.cut_range[1][0]]
-        gauss_img = cv2.GaussianBlur(cut_image, (25, 25), sigmaX=0, sigmaY=0)
-        edge_img = cv2.adaptiveThreshold(gauss_img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 81, -7) # 在二值化之后的图像直接爆改
-        if self.turn_times > 0: # 当还没有用完的时候试一试
+        # cut_image = self.image[self.cut_range[0][1]:self.cut_range[1][1], self.cut_range[0][0]:self.cut_range[1][0]]
+        gauss_img = cv2.GaussianBlur(self.image, (25, 25), sigmaX=0, sigmaY=0)
+        full_edge_img = cv2.adaptiveThreshold(gauss_img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 81, -7) # 在二值化之后的图像直接爆改
+        # 取消图片的裁切操作，先把完整的图片进行自适应阈值之后再裁切出需要的部分
+        edge_img = full_edge_img[self.cut_range[0][1]:self.cut_range[1][1], self.cut_range[0][0]:self.cut_range[1][0]]
+        # 这个就是完整的自适应阈值后图片
+        x, y, w, h = 100, 400, 439, 50  # 检测的初始像素位置与长宽
+        detect_part = full_edge_img[y:y + h, x:x + w] # 这个是检测这里面像素的总值大小来判断是否为直角的
+        count_1 = np.sum(detect_part == 255)
+        if count_1 >= self.turn_tar:
+            self.if_turn = True
+        else:
+            pass
 
-            horizontal_sum = np.sum(edge_img, axis=1)
-            # 将求和结果除以255进行归一化
-            normalized_sum = horizontal_sum / 255
-           # 对归一化后的数组的某一部分进行求和
-            partial_sum = np.sum(normalized_sum[self.turn_loc[0]:self.turn_loc[1]])
-            if partial_sum >= self.turn_tar:
-                self.turn_times -= 1
-                self.if_turn = True
+# byd重写
+
+
+
         kernel = np.ones((5, 5), dtype=np.uint8)
         edge_img = cv2.erode(edge_img, kernel, 1)
         self.in_doing_img = edge_img
@@ -94,7 +100,7 @@ class LineFinder:
         else:
             flag = "normal"
 
-        return mid_line, flag
+        return mid_line, flag, self.if_turn
 
     def process(self, mode="cam"):
         """
